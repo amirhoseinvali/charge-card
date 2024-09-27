@@ -8,17 +8,23 @@ from utils.validators import phone_number_validator
 
 class Client(models.Model):
     id = models.UUIDField(auto_created=True, primary_key=True, default=uuid.uuid4, editable=False)
-    phone_number = models.CharField(max_length=13, validators=[phone_number_validator])
+    phone_number = models.CharField(unique=True, max_length=13, validators=[phone_number_validator])
     registration_date =  models.DateTimeField(default=now, blank=True, editable=False)
     inventory = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
+    
+    def increase_inventory(self, amount_to_add):  
+        if amount_to_add <= 0:  
+            raise ValueError("Amount must be a positive integer.")  
+        self.inventory += amount_to_add  
+        self.save()
 
-class Charge(models.Model):
+class ChargeRequests(models.Model):
     id = models.UUIDField(auto_created=True, primary_key=True, default=uuid.uuid4, editable=False)
     seller = models.ForeignKey(Sellers, on_delete=models.CASCADE)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    amount = models.PositiveIntegerField(default=0)
+    amount = models.PositiveIntegerField()
     request_time = models.DateTimeField(default=now, blank=True, editable=False)
 
 
