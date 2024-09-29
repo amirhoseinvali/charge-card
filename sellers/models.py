@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import User
-
+import datetime
 class Sellers(models.Model):
     id = models.UUIDField(auto_created=True, primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(null=True, blank=True,max_length=30)
@@ -31,14 +31,23 @@ class Sellers(models.Model):
         if open_charge_request_count:
             return True
         return False
+    
+    def get_inventory(self):
+        return self.inventory
 
 class Charge(models.Model):
     id = models.UUIDField(auto_created=True, primary_key=True, default=uuid.uuid4, editable=False)
     seller = models.ForeignKey(Sellers, on_delete=models.CASCADE)
-    amount = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField(default=0)
     request_time = models.DateTimeField(default=now, blank=True, editable=False)
     confirmed_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     confirmed_time = models.DateTimeField(blank=True, null=True)
     is_confirmed = models.BooleanField(default=False)
+
+    def confirm_charge(self, admin):  
+        self.is_confirmed = True
+        self.confirmed_time = datetime.datetime.now()
+        self.confirmed_by = admin
+        self.save()
 
 

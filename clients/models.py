@@ -13,18 +13,20 @@ class Client(models.Model):
     inventory = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
-    
     def increase_inventory(self, amount_to_add):  
         if amount_to_add <= 0:  
             raise ValueError("Amount must be a positive integer.")  
         self.inventory += amount_to_add  
         self.save()
 
+    def get_inventory(self):
+        return self.inventory
+
 class ChargeRequests(models.Model):
     id = models.UUIDField(auto_created=True, primary_key=True, default=uuid.uuid4, editable=False)
     seller = models.ForeignKey(Sellers, on_delete=models.CASCADE)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()
-    request_time = models.DateTimeField(default=now, blank=True, editable=False)
+    request_time = models.DateTimeField(default=now)
 
 
