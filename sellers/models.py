@@ -3,6 +3,8 @@ from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 import datetime
+from utils import exceptions
+
 class Sellers(models.Model):
     id = models.UUIDField(auto_created=True, primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(null=True, blank=True,max_length=30)
@@ -14,15 +16,15 @@ class Sellers(models.Model):
 
     def increase_inventory(self, amount_to_increase):  
         if amount_to_increase <= 0:  
-            raise ValueError("Amount must be a positive integer.")  
+            raise exceptions.AmountValue()  
         self.inventory += amount_to_increase  
         self.save()
 
     def decrease_inventory(self, amount_to_decrease):  
         if amount_to_decrease <= 0:  
-            raise ValueError("Amount must be a positive integer.")
+            raise exceptions.AmountValue()
         if self.inventory - amount_to_decrease < 0:
-            raise ValueError("Inventory is Not Enough")
+            raise exceptions.InventoryNotEnough()
         self.inventory -= amount_to_decrease  
         self.save()
 
@@ -44,10 +46,13 @@ class Charge(models.Model):
     confirmed_time = models.DateTimeField(blank=True, null=True)
     is_confirmed = models.BooleanField(default=False)
 
-    def confirm_charge(self, admin):  
-        self.is_confirmed = True
-        self.confirmed_time = datetime.datetime.now()
-        self.confirmed_by = admin
-        self.save()
+    def confirm_charge(self, admin):
+        if not self.is_confirmed:
+            self.is_confirmed = True
+            self.confirmed_time = datetime.datetime.now()
+            self.confirmed_by = admin
+            self.save()
+            return True
+        return False
 
 

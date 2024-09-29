@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'clients',
     'sellers',
-    'operators',
 ]
 
 MIDDLEWARE = [

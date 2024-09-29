@@ -37,8 +37,6 @@ class ChargeSerializer(serializers.ModelSerializer):
 
 
 
-
-
 class ConfirmChargeSerializer(serializers.ModelSerializer):  
     class Meta:  
         model = Charge  

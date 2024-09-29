@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.timezone import now
 from sellers.models import Sellers
 from utils.validators import phone_number_validator
-
+from utils import exceptions
 
 
 class Client(models.Model):
@@ -15,7 +15,7 @@ class Client(models.Model):
 
     def increase_inventory(self, amount_to_add):  
         if amount_to_add <= 0:  
-            raise ValueError("Amount must be a positive integer.")  
+            raise exceptions.AmountValue()
         self.inventory += amount_to_add  
         self.save()
 
