@@ -22,11 +22,11 @@ class ClientDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'id'
 
 
-class ClientChargeslAPIView(generics.RetrieveAPIView):
+class ClientChargesAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated, permissions.IsAdmin]
     queryset = ChargeRequests.objects.all()
     serializer_class = ClientChargeSerializer
-    lookup_field = 'id'
+
 
 
 

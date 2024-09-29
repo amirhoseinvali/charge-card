@@ -18,7 +18,7 @@ class ChargeFelow(APITestCase):
             'username': username,
             'pasword': password,
         }
-        response = self.client.post(reverse('token_obtain_pair'), data, format='json')
+        response = self.client.post(url='http://localhost:8000/api/token/', data=data, format='json')
         print(response)
         print(response.data['access'])
         return response.data['access']
@@ -35,6 +35,6 @@ class ChargeFelow(APITestCase):
             'phone_number': '+989120853818',
             'amount': 20000,
         }
-        response = self.client.post(reverse('charge-client'),headers, data, format='json')
+        response = self.client.post(url='http://localhost:8000/api/token/',headers=headers, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         # self.assertEqual(response.data['field1'], 'value1')

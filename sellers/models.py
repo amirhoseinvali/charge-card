@@ -20,7 +20,7 @@ class Sellers(models.Model):
         self.inventory += amount_to_increase  
         self.save()
 
-    def decrease_inventory(self, amount_to_decrease):  
+    def decrease_inventory(self, amount_to_decrease):
         if amount_to_decrease <= 0:  
             raise exceptions.AmountValue()
         if self.inventory - amount_to_decrease < 0:
